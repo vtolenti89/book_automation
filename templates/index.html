@@ -1,42 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <title>SLA Editor</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>SLA Editor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body class="p-4">
-  <div class="container">
-    <h1>Edit SLA File</h1>
+    <div class="container">
+        <h1>Characters</h1>
 
-    <form id="colorForm" class="mb-4">
-      <input type="text" placeholder="Target Color" id="targetColor" class="form-control mb-2">
-      <input type="text" placeholder="Replacement Color" id="replacementColor" class="form-control mb-2">
-      <button type="submit" class="btn btn-primary">Replace Color</button>
-    </form>
+        <input type="file" id="svgFiles" accept=".svg" multiple class="form-control mb-2" />
+        <button id="analyzeColors" class="btn btn-secondary mb-4">Extract Colors</button>
+        <div id="colorMappings" class="mb-4"></div>
+<button id="previewColorChanges" class="btn btn-secondary mb-2">Preview</button>
+<button id="applyColorChanges" class="btn btn-success mb-4" disabled>Apply Changes</button>
 
-    <div id="result"></div>
-  </div>
+        <div id="previewArea" class="mt-4">
+            <h3>Preview Updated SVGs</h3>
+            <div id="svgPreviewContainer" class="d-flex flex-wrap gap-3"></div>
+        </div>
 
-  <script>
-    document.getElementById('colorForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const targetColor = document.getElementById('targetColor').value;
-      const replacementColor = document.getElementById('replacementColor').value;
+        <!-- Fullscreen Modal for Side-by-Side Comparison -->
+        <div class="modal fade" id="svgModal" tabindex="-1" aria-labelledby="svgModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="svgModalLabel">SVG Comparison</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body d-flex justify-content-center gap-4 flex-wrap">
+                        <div>
+                            <h6>Original</h6>
+                            <img id="modalOriginal" src="" alt="Original"
+                                style="max-width: 100%; border: 1px solid #ccc;" />
+                        </div>
+                        <div>
+                            <h6>Modified</h6>
+                            <img id="modalModified" src="" alt="Modified"
+                                style="max-width: 100%; border: 1px solid #ccc;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-      const res = await fetch('/api/sla/replace-color', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          file_path: 'example.sla',
-          target_color: targetColor,
-          replacement_color: replacementColor
-        })
-      });
-
-      const result = await res.json();
-      document.getElementById('result').innerText = result.success ? 'Color replaced.' : 'No changes made.';
-    });
-  </script>
+    </div>
+    <script type="text/javascript" src="../static/js/mains.js"></script>
 </body>
+
 </html>
